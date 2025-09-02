@@ -10,10 +10,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/arslan-atajykov/eventDrivenOrders/internal/order"
 	"github.com/go-chi/chi/v5"
 	_ "github.com/lib/pq"
-
-	"github.com/yourname/eventdrivenorders/internal/order"
 )
 
 func main() {
