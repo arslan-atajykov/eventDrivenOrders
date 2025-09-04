@@ -6,11 +6,12 @@ import (
 )
 
 type Handler struct {
-	repo *Repository
+	repo     *Repository
+	producer *Producer
 }
 
-func NewHandler(repo *Repository) *Handler {
-	return &Handler{repo: repo}
+func NewHandler(repo *Repository, producer *Producer) *Handler {
+	return &Handler{repo: repo, producer: producer}
 }
 
 func (h *Handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
@@ -34,6 +35,10 @@ func (h *Handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 
 	if err := h.repo.CreateOrder(r.Context(), &o); err != nil {
 		http.Error(w, "failed to create order", http.StatusInternalServerError)
+		return
+	}
+	if err := h.producer.PublishOrder(r.Context(), &o); err != nil {
+		http.Error(w, "failed to publish even:"+err.Error(), http.StatusInternalServerError)
 		return
 	}
 

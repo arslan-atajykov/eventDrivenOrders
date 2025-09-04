@@ -35,7 +35,10 @@ func main() {
 	db.SetConnMaxLifetime(5 * time.Minute)
 
 	repo := order.NewRepository(db)
-	handler := order.NewHandler(repo)
+
+	producer := order.NewProducer("localhost:9092", "orders")
+	defer producer.Close()
+	handler := order.NewHandler(repo, producer)
 
 	r := chi.NewRouter()
 	r.Post("/orders", handler.CreateOrder)
