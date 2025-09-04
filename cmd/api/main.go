@@ -36,7 +36,7 @@ func main() {
 
 	repo := order.NewRepository(db)
 
-	producer := order.NewProducer("localhost:9092", "orders")
+	producer := order.NewProducer("localhost:29092", "orders")
 	defer producer.Close()
 	handler := order.NewHandler(repo, producer)
 
